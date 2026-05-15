@@ -679,16 +679,16 @@ function drawMap(){
       ctx.stroke();
     }
     ctx.restore();
-    // Label
+    // Label — opacity decoupled from region intensity so text stays readable in all quadrants
     const cx=(px0+px1)/2, cy=(py0+py1)/2;
-    ctx.fillStyle=`rgba(120,110,150,${intensity*0.9})`;
-    ctx.font=`500 9px monospace`;
+    ctx.fillStyle=`rgba(160,150,190,0.90)`;
+    ctx.font=`500 10px monospace`;
     ctx.textAlign='center';
-    ctx.fillText(label, cx, cy-6);
+    ctx.fillText(label, cx, cy-7);
     if(sublabel){
-      ctx.fillStyle=`rgba(100,90,130,${intensity*0.7})`;
-      ctx.font=`8px monospace`;
-      ctx.fillText(sublabel, cx, cy+7);
+      ctx.fillStyle=`rgba(140,130,170,0.78)`;
+      ctx.font=`9px monospace`;
+      ctx.fillText(sublabel, cx, cy+8);
     }
   };
 
