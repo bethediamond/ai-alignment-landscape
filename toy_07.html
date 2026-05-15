@@ -703,20 +703,20 @@ function drawMap(){
   // Lower-right: bottom-right corner — V(t) degradation pulls y-axis down
   const lrX = PAD.l + 0.91*pw;
   const lrY = PAD.t + (1-0.08)*ph;
-  ctx.strokeStyle='rgba(232,160,48,0.55)'; ctx.lineWidth=1.2;
-  ctx.beginPath(); ctx.moveTo(lrX, lrY-16); ctx.lineTo(lrX, lrY-2); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(lrX-4, lrY-6); ctx.lineTo(lrX, lrY-1); ctx.lineTo(lrX+4, lrY-6); ctx.stroke();
-  ctx.fillStyle='rgba(232,160,48,0.60)'; ctx.font='8px monospace'; ctx.textAlign='center';
-  ctx.fillText('V(t)↓', lrX, lrY-18);
+  ctx.strokeStyle='rgba(232,160,48,0.80)'; ctx.lineWidth=1.8;
+  ctx.beginPath(); ctx.moveTo(lrX, lrY-20); ctx.lineTo(lrX, lrY-2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(lrX-5, lrY-8); ctx.lineTo(lrX, lrY-1); ctx.lineTo(lrX+5, lrY-8); ctx.stroke();
+  ctx.fillStyle='rgba(232,160,48,0.85)'; ctx.font='bold 10px monospace'; ctx.textAlign='center';
+  ctx.fillText('V(t)↓', lrX, lrY-23);
 
   // Upper-left: top-left corner — S_corr degradation, diagonal down-left
   const ulX = PAD.l + 0.08*pw;
   const ulY = PAD.t + (1-0.90)*ph;
-  ctx.strokeStyle='rgba(232,160,48,0.55)'; ctx.lineWidth=1.2;
-  ctx.beginPath(); ctx.moveTo(ulX+14, ulY); ctx.lineTo(ulX+2, ulY+12); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(ulX+2, ulY+5); ctx.lineTo(ulX, ulY+13); ctx.lineTo(ulX+8, ulY+11); ctx.stroke();
-  ctx.fillStyle='rgba(232,160,48,0.60)'; ctx.font='8px monospace'; ctx.textAlign='left';
-  ctx.fillText('S_corr↓', ulX, ulY-3);
+  ctx.strokeStyle='rgba(232,160,48,0.80)'; ctx.lineWidth=1.8;
+  ctx.beginPath(); ctx.moveTo(ulX+17, ulY); ctx.lineTo(ulX+2, ulY+15); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ulX+2, ulY+7); ctx.lineTo(ulX, ulY+16); ctx.lineTo(ulX+9, ulY+13); ctx.stroke();
+  ctx.fillStyle='rgba(232,160,48,0.85)'; ctx.font='bold 10px monospace'; ctx.textAlign='left';
+  ctx.fillText('S_corr↓', ulX, ulY-4);
 
   // OP4 asymptotic band
   if(op4){
