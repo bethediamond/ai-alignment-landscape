@@ -755,14 +755,14 @@ function drawMap(){
   // Without OP4: broad translucent region; with OP4: narrowed
   ctx.save();
   if(!op4){
-    ctx.strokeStyle='rgba(255,255,255,0.18)';
+    ctx.strokeStyle='rgba(255,255,255,0.32)';
     ctx.lineWidth=1; ctx.setLineDash([4,4]);
     ctx.strokeRect(PAD.l+0.50*pw, PAD.t, 0.50*pw, 0.50*ph);
     ctx.restore();
     // Label inside
-    ctx.fillStyle='rgba(255,255,255,0.20)'; ctx.font='500 9px monospace'; ctx.textAlign='center';
+    ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.font='500 10px monospace'; ctx.textAlign='center';
     ctx.fillText('Residual candidate region', PAD.l+0.75*pw, PAD.t+0.20*ph);
-    ctx.fillStyle='rgba(255,255,255,0.13)'; ctx.font='8px monospace';
+    ctx.fillStyle='rgba(255,255,255,0.38)'; ctx.font='9px monospace';
     ctx.fillText('passes current filter conditions', PAD.l+0.75*pw, PAD.t+0.30*ph);
     ctx.fillText('content not determined', PAD.l+0.75*pw, PAD.t+0.39*ph);
   } else {
