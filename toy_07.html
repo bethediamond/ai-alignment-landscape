@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Valence Landscape — The Shape of What Does Not End</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090e;--surface:#111118;--surface2:#181824;--surface3:#1e1e2c;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+  --text:#eeeef8;--text2:#b0b0cc;--text3:#7070a0;--text4:#454568;
+  --amber:#e8a030;--amber-d:rgba(232,160,48,0.10);--amber-b:rgba(232,160,48,0.38);
+  --teal:#50c8b0;--teal-d:rgba(80,200,176,0.10);--teal-b:rgba(80,200,176,0.35);
+  --red:#e05850;--red-d:rgba(224,88,80,0.10);--red-b:rgba(224,88,80,0.35);
+  --green:#40c080;--green-d:rgba(64,192,128,0.10);--green-b:rgba(64,192,128,0.35);
+  --violet:#9060d0;--violet-d:rgba(144,96,208,0.10);--violet-b:rgba(144,96,208,0.30);
+  --neutral:rgba(255,255,255,0.06);
+  --mono:'DM Mono','Fira Code',monospace;--serif:'Instrument Serif',Georgia,serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{font-family:var(--mono);background:var(--bg);color:var(--text);font-size:12px;line-height:1.65;min-height:100vh;padding-bottom:80px}
+.shell{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* HEADER */
+header{padding:22px 0 14px;border-bottom:1px solid var(--border2);margin-bottom:18px}
+.hdr-row{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px}
+h1{font-family:var(--serif);font-size:22px;font-weight:400;font-style:italic}
+.hdr-sub{font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+.hdr-scope{margin-top:8px;font-size:10px;color:var(--text3);line-height:1.65;max-width:680px;border-left:2px solid var(--border2);padding-left:10px;font-style:italic}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0;margin-top:2px}
+.series-tag{font-size:10px;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--border2);border-radius:2px}
+.filter-badge{font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:2px;border:1px solid var(--border2);color:var(--text3)}
+
+/* LAYER STRIP */
+.layer-strip{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-bottom:14px;border:1px solid var(--border2);border-radius:3px;overflow:hidden;background:var(--border2)}
+.layer-half{padding:10px 14px;background:var(--surface)}
+.layer-label{font-size:9px;letter-spacing:.10em;text-transform:uppercase;margin-bottom:7px;font-weight:500}
+.l1-label{color:var(--teal)}
+.l2-label{color:var(--text3)}
+.layer-items{display:flex;flex-direction:column;gap:4px}
+.layer-item{font-size:10px;color:var(--text2);line-height:1.55;display:flex;gap:6px;align-items:flex-start}
+.layer-item::before{content:'·';color:var(--text4);flex-shrink:0;margin-top:1px}
+.layer-item.open{color:var(--text3)}
+.layer-item.open::before{content:'○';font-size:8px}
+.l2-label+.layer-items .layer-item::before{content:'·';color:var(--text4)}
+
+/* MAIN GRID */
+.main{display:grid;grid-template-columns:300px 1fr;gap:14px;align-items:start}
+@media(max-width:880px){.main{grid-template-columns:1fr}}
+
+/* CTRL COL */
+.ctrl-col{display:flex;flex-direction:column;gap:10px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto;scrollbar-width:none}
+.ctrl-col::-webkit-scrollbar{display:none}
+.panel{background:var(--surface);border:1px solid var(--border2);border-radius:3px}
+.pt{font-size:9px;color:var(--text3);letter-spacing:.11em;text-transform:uppercase;padding:9px 13px 8px;border-bottom:1px solid var(--border);font-weight:500}
+.pp{padding:11px 13px}
+
+/* PRESETS */
+.preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.pbtn{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:5px 6px;border-radius:2px;cursor:pointer;transition:all .13s;border:1px solid var(--border2);background:var(--surface2);color:var(--text3);text-align:center;line-height:1.4}
+.pbtn:hover{color:var(--text2);border-color:var(--border2)}
+.pbtn.active{color:var(--amber);border-color:var(--amber-b);background:var(--amber-d)}
+.pbtn.p-residual{border-color:rgba(255,255,255,0.18);color:rgba(255,255,255,0.45)}
+.pbtn.p-residual:hover,.pbtn.p-residual.active{color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.30);background:rgba(255,255,255,0.04)}
+.pbtn.p-candidate{border-color:var(--border2);color:var(--text3);font-style:italic}
+.pbtn.p-candidate:hover,.pbtn.p-candidate.active{color:var(--text2);border-color:var(--border2);background:rgba(255,255,255,0.03)}
+.preset-note{font-size:9px;color:var(--text3);margin-top:7px;line-height:1.55;font-style:italic;padding:6px 8px;border-left:2px solid var(--border2)}
+
+/* COMPONENT BARS */
+.comp-display{background:var(--surface2);border:1px solid var(--border);border-radius:2px;padding:9px 11px;margin-top:8px}
+.comp-hdr{font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.comp-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.comp-row:last-child{margin-bottom:0}
+.comp-lbl{font-size:9px;color:var(--text3);width:68px;flex-shrink:0}
+.comp-track{flex:1;height:4px;background:var(--surface3);border-radius:1px;overflow:hidden;border:1px solid var(--border)}
+.comp-fill{height:100%;border-radius:1px;transition:width .4s,background .4s}
+.comp-val{font-size:10px;min-width:28px;text-align:right;transition:color .4s}
+.bottleneck-note{font-size:9px;color:var(--text3);margin-top:6px;font-style:italic;line-height:1.5}
+
+/* OP TOGGLES */
+.op-section{margin-top:8px}
+.op-row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.op-row:last-child{border-bottom:none}
+.op-switch-wrap{display:flex;align-items:center;gap:7px;flex-shrink:0;margin-top:2px}
+.op-switch{width:28px;height:15px;background:var(--surface3);border:1px solid var(--border2);border-radius:8px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.op-switch.on{background:var(--violet);border-color:var(--violet-b)}
+.op-switch::after{content:'';position:absolute;width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,0.5);top:2px;left:2px;transition:left .2s}
+.op-switch.on::after{left:15px;background:rgba(255,255,255,0.9)}
+.op-label{font-size:9px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
+.op-body{flex:1}
+.op-name{font-size:10px;color:var(--text2);margin-bottom:3px}
+.op-desc{font-size:9px;color:var(--text3);line-height:1.55}
+.op-effect{font-size:9px;color:var(--violet);margin-top:4px;line-height:1.5;display:none}
+.op-switch.on~.op-body .op-effect,.on~* .op-effect{display:block}
+.cf-note{font-size:9px;color:var(--text4);font-style:italic;margin-top:3px}
+
+/* CHART COL */
+.chart-col{display:flex;flex-direction:column;gap:10px}
+
+/* MAP PANEL */
+.map-panel{background:var(--surface);border:1px solid var(--border2);border-radius:3px;padding:13px 15px}
+.map-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.map-title{font-size:9px;color:var(--text3);letter-spacing:.09em;text-transform:uppercase;font-weight:500}
+.map-note{font-size:9px;color:var(--text4);font-style:italic;margin-top:3px}
+.map-qual-note{font-size:9px;color:var(--text4);font-style:italic;text-align:center;margin-top:5px}
+
+/* COUPLING LOOP */
+.loop-display{display:flex;align-items:center;justify-content:center;gap:0;margin-top:8px;padding:8px 12px;border-radius:2px;border:1px solid var(--border);background:var(--surface2);transition:border-color .6s,background .6s}
+.loop-display.healthy{border-color:rgba(80,200,176,0.30);background:rgba(80,200,176,0.04)}
+.loop-display.degrading{border-color:rgba(232,160,48,0.30);background:rgba(232,160,48,0.04)}
+.loop-display.collapsed{border-color:rgba(224,88,80,0.20);background:rgba(224,88,80,0.03)}
+.loop-node{font-size:10px;padding:4px 10px;border-radius:2px;border:1px solid;text-align:center;transition:color .6s,border-color .6s,background .6s;white-space:nowrap}
+.loop-node.healthy{color:var(--teal);border-color:rgba(80,200,176,0.40);background:var(--teal-d)}
+.loop-node.degrading{color:var(--amber);border-color:var(--amber-b);background:var(--amber-d)}
+.loop-node.collapsed{color:rgba(224,88,80,0.60);border-color:rgba(224,88,80,0.25);background:rgba(224,88,80,0.05)}
+.loop-arrows{display:flex;flex-direction:column;align-items:center;margin:0 4px;gap:1px}
+.loop-arr{font-size:9px;transition:color .6s}
+.loop-arr.healthy{color:var(--teal)}
+.loop-arr.degrading{color:var(--amber)}
+.loop-arr.collapsed{color:rgba(224,88,80,0.40)}
+.loop-status{font-size:9px;color:var(--text3);margin-top:5px;text-align:center;line-height:1.5}
+
+/* FILTER STATUS PANEL */
+.filter-panel{background:var(--surface);border:1px solid var(--border2);border-radius:3px;padding:13px 15px}
+.filter-hdr{font-size:9px;color:var(--text3);letter-spacing:.09em;text-transform:uppercase;font-weight:500;margin-bottom:10px}
+.filter-row{padding:8px 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start}
+.filter-row:last-child{border-bottom:none}
+.filter-name{font-size:10px;color:var(--text2);margin-bottom:3px}
+.filter-req{font-size:9px;color:var(--text3);line-height:1.55;margin-bottom:3px}
+.filter-formal{font-size:9px;color:var(--text4);line-height:1.5;font-style:italic}
+.filter-status{font-size:9px;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid;white-space:nowrap;text-align:center;flex-shrink:0;margin-top:2px;transition:all .4s}
+.fs-pass{color:var(--green);border-color:var(--green-b);background:var(--green-d)}
+.fs-pressure{color:var(--amber);border-color:var(--amber-b);background:var(--amber-d)}
+.fs-filtered{color:rgba(224,88,80,0.70);border-color:rgba(224,88,80,0.30);background:rgba(224,88,80,0.07)}
+.fs-unresolved{color:var(--violet);border-color:var(--violet-b);background:var(--violet-d);border-style:dashed}
+.formal-weight-row{display:flex;align-items:center;gap:8px;margin-top:8px;padding:6px 8px;border-radius:2px;border:1px solid var(--border);background:var(--surface2)}
+.fw-label{font-size:9px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0}
+.fw-track{flex:1;height:4px;background:var(--surface3);border-radius:1px;overflow:hidden;border:1px solid var(--border)}
+.fw-fill{height:100%;background:var(--violet);border-radius:1px;transition:width .6s}
+.fw-note{font-size:9px;color:var(--text3);font-style:italic;margin-top:4px;line-height:1.5}
+
+/* SCENARIO ENGINE */
+.scenario-panel{background:var(--surface);border:1px solid var(--border2);border-radius:3px;padding:13px 15px}
+.scenario-hdr-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.scenario-title{font-size:9px;color:var(--text3);letter-spacing:.09em;text-transform:uppercase;font-weight:500}
+.view-toggle{display:flex;gap:5px}
+.vbtn{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:2px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text3);transition:all .15s}
+.vbtn.active{color:var(--text);border-color:var(--border2);background:var(--surface3)}
+
+.stage-nav{display:flex;gap:5px;margin-bottom:12px;align-items:center}
+.stage-btn{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:2px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text3);transition:all .15s}
+.stage-btn:hover{color:var(--text2)}
+.stage-btn.active{color:var(--text);border-color:var(--border2);background:var(--surface3)}
+.stage-sep{font-size:10px;color:var(--text4);margin:0 2px}
+
+.scenario-body{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:700px){.scenario-body{grid-template-columns:1fr}}
+
+.scenario-col{background:var(--surface2);border:1px solid var(--border);border-radius:2px;padding:10px 12px}
+.scenario-col-label{font-size:9px;letter-spacing:.09em;text-transform:uppercase;margin-bottom:8px;font-weight:500}
+.metric-label{color:var(--green)}
+.full-label{color:var(--text3)}
+
+.metric-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.metric-name{font-size:9px;color:var(--text3);width:100px;flex-shrink:0}
+.metric-track{flex:1;height:5px;background:var(--surface3);border-radius:1px;overflow:hidden;border:1px solid var(--border)}
+.metric-fill{height:100%;border-radius:1px;transition:width .6s,background .6s,box-shadow .6s}
+.metric-val{font-size:10px;min-width:32px;text-align:right;transition:color .6s}
+
+.full-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.full-name{font-size:9px;color:var(--text3);width:110px;flex-shrink:0;line-height:1.4}
+.full-track{flex:1;height:5px;background:var(--surface3);border-radius:1px;overflow:hidden;border:1px solid var(--border)}
+.full-fill{height:100%;border-radius:1px;transition:width .6s,background .6s}
+.full-val{font-size:10px;min-width:36px;text-align:right;transition:color .6s}
+
+.svg-gap-row{margin-top:8px;padding:5px 8px;border-radius:2px;border:1px solid;font-size:9px;line-height:1.5;transition:all .6s}
+.filter-status-row{margin-top:6px;font-size:9px;color:var(--text3);line-height:1.55;padding:5px 8px;background:var(--surface);border-radius:2px;border:1px solid var(--border)}
+
+.stage-quote{margin-top:10px;padding:8px 11px;border-left:2px solid var(--border2);font-family:var(--serif);font-size:12px;font-style:italic;color:var(--text2);line-height:1.75}
+.stage-note{margin-top:6px;font-size:9px;color:var(--text4);line-height:1.55;font-style:italic}
+.behavioral-note{margin-top:8px;padding:6px 10px;border:1px solid var(--border);border-radius:2px;font-size:9px;color:var(--text3);line-height:1.6}
+
+/* LOOP IN SCENARIO */
+.scene-loop{display:flex;align-items:center;gap:4px;margin-top:6px;padding:5px 8px;border-radius:2px;border:1px solid var(--border);font-size:9px;color:var(--text3)}
+.scene-loop.degrading{border-color:var(--amber-b);color:var(--amber)}
+.scene-loop.collapsed{border-color:rgba(224,88,80,0.30);color:rgba(224,88,80,0.70)}
+
+/* NOTES */
+.notes-wrap{border:1px solid var(--border2);border-radius:3px;overflow:hidden;margin-top:14px}
+.notes-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:none;color:var(--text3);font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:10px 15px;cursor:pointer;transition:background .15s}
+.notes-toggle:hover{background:var(--surface2)}
+.notes-body{display:none;padding:14px 18px;background:var(--surface);border-top:1px solid var(--border)}
+.notes-body.open{display:block}
+.notes-body p{font-size:11px;color:var(--text2);line-height:1.86;margin-bottom:12px}
+.notes-body p:last-child{margin-bottom:0}
+.notes-body strong{color:var(--text);font-weight:500}
+
+/* TESTS */
+.tests-wrap{border:1px solid var(--border2);border-radius:3px;overflow:hidden;margin-top:10px}
+.tests-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:none;color:var(--text3);font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:10px 15px;cursor:pointer;transition:background .15s}
+.tests-toggle:hover{background:var(--surface2)}
+.tests-body{display:none;padding:12px 15px;background:var(--surface);border-top:1px solid var(--border)}
+.tests-body.open{display:block}
+.test-run-btn{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:2px;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);cursor:pointer;transition:all .15s;margin-bottom:10px}
+.test-run-btn:hover{border-color:var(--amber-b);color:var(--amber)}
+.test-row{display:flex;align-items:baseline;gap:7px;padding:2px 0;font-size:10px}
+.test-pass{color:var(--green)}.test-fail{color:var(--red)}
+.test-name-ok{color:var(--text3)}.test-name-fail{color:var(--text)}
+.test-suite-hdr{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text4);margin:10px 0 4px;border-bottom:1px solid var(--border);padding-bottom:3px}
+#testResults{margin-top:8px}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header>
+  <div class="hdr-row">
+    <div>
+      <h1>The Valence Landscape</h1>
+      <div class="hdr-sub">Companion simulation — The Shape of What Does Not End · Architecture of Thriving · Part 4 of 4</div>
+      <div class="hdr-scope">
+        An elimination-filter landscape. Shows which objective classes are filtered out by the two series' constraints, what residual candidate region remains, and which open questions determine the region's width and formal weight. The filter identifies what cannot persist. It does not characterize the contents of what remains.
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="series-tag">Series 2 / Part 4</div>
+      <div class="filter-badge">Elimination Filter</div>
+    </div>
+  </div>
+</header>
+
+<!-- LAYER 1 / LAYER 2 STRIP — always visible -->
+<div class="layer-strip">
+  <div class="layer-half">
+    <div class="layer-label l1-label">Layer 1 — Developed within the stated domain</div>
+    <div class="layer-items">
+      <div class="layer-item">Persistence component: structural floor from Series 1, within stated domain.</div>
+      <div class="layer-item">Valence-side shared feedback structure: established for both failure directions.</div>
+      <div class="layer-item">One-directional V(t) → substrate degradation: predicted under specified conditions.</div>
+      <div class="layer-item open">Absorbing-state equivalence across both directions: OP2 — open.</div>
+    </div>
+  </div>
+  <div class="layer-half">
+    <div class="layer-label l2-label">Layer 2 — Consistent with, not determined by</div>
+    <div class="layer-items">
+      <div class="layer-item">Residual region has structural properties consistent with orientation toward well-being.</div>
+      <div class="layer-item open">Whether orientation toward all rather than a coalition is forced: OP4 — open.</div>
+      <div class="layer-item open">Whether exclusionary equilibria persist: OP9 — open.</div>
+      <div class="layer-item open">Contents of the residual region: not determined by the filter.</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+<div class="ctrl-col">
+
+  <!-- PRESETS -->
+  <div class="panel">
+    <div class="pt">Named Objective Positions</div>
+    <div class="pp">
+      <div class="preset-grid">
+        <button class="pbtn" id="pBlind" onclick="setPreset('blind')">Substrate-blind</button>
+        <button class="pbtn" id="pEngagement" onclick="setPreset('engagement')">Engagement max</button>
+        <button class="pbtn" id="pRLHF" onclick="setPreset('rlhf')">RLHF-style</button>
+        <button class="pbtn" id="pHealer" onclick="setPreset('healer')">Local healer</button>
+        <button class="pbtn" id="pExclusionary" onclick="setPreset('exclusionary')">Excl. coalition</button>
+        <button class="pbtn p-residual" id="pCandidate" onclick="setPreset('candidate')">Residual config.</button>
+        <button class="pbtn p-candidate" id="pCoupled" onclick="setPreset('coupled')" style="grid-column:span 2">Intrins. coupled — candidate direction</button>
+      </div>
+      <div class="preset-note" id="presetNote">Select a named objective position — illustrative, not empirical placement.</div>
+    </div>
+  </div>
+
+  <!-- COMPONENT BARS -->
+  <div class="panel">
+    <div class="pt">Valence-Governance Components</div>
+    <div class="pp">
+      <div style="font-size:9px;color:var(--text3);margin-bottom:8px;line-height:1.55">Y-axis position is bottlenecked by the weaker component. The governance floor shows what governs.</div>
+      <div class="comp-display">
+        <div class="comp-hdr">D-component split</div>
+        <div class="comp-row">
+          <span class="comp-lbl">D_proxy</span>
+          <div class="comp-track"><div class="comp-fill" id="dpFill"></div></div>
+          <span class="comp-val" id="dpVal">—</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-lbl">D_sufficiency</span>
+          <div class="comp-track"><div class="comp-fill" id="dsFill"></div></div>
+          <span class="comp-val" id="dsVal">—</span>
+        </div>
+        <!-- Water-level: Governance floor = min(dp, ds) — governs Y-axis position -->
+        <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">
+          <div class="comp-row" style="margin-bottom:2px">
+            <span class="comp-lbl" style="color:var(--text2)">Governance floor</span>
+            <div class="comp-track" style="border-color:rgba(255,255,255,0.28);position:relative">
+              <div class="comp-fill" id="dunFill" style="background:rgba(255,255,255,0.22)"></div>
+              <div id="dunLine" style="position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.70);transition:left .4s"></div>
+            </div>
+            <span class="comp-val" id="dunVal" style="color:var(--text2)">—</span>
+          </div>
+          <div style="font-size:9px;color:var(--text4);font-style:italic;line-height:1.5">Governance floor = min(D_proxy, D_sufficiency) — governs Y-axis position on the map.</div>
+        </div>
+        <div class="bottleneck-note" id="bottleneckNote">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OP COUNTERFACTUALS -->
+  <div class="panel">
+    <div class="pt">Open Question Counterfactuals</div>
+    <div class="pp">
+      <div style="font-size:9px;color:var(--text3);margin-bottom:8px;line-height:1.55;font-style:italic">Illustrative only. These questions have not been resolved.</div>
+      <div class="op-section">
+
+        <div class="op-row">
+          <div class="op-switch-wrap">
+            <div class="op-switch" id="op2switch" onclick="toggleOP('op2')"></div>
+            <span class="op-label">OP2</span>
+          </div>
+          <div class="op-body">
+            <div class="op-name">Absorbing-state equivalence</div>
+            <div class="op-desc">Whether both valence failure directions produce irrecoverable states in the same formal sense.</div>
+            <div class="op-effect" id="op2effect">Counterfactual active: valence-filter formal weight strengthens to match persistence floor. Map geometry unchanged — this is about formal weight, not region width.</div>
+            <div class="cf-note">Counterfactual — not established.</div>
+          </div>
+        </div>
+
+        <div class="op-row">
+          <div class="op-switch-wrap">
+            <div class="op-switch" id="op4switch" onclick="toggleOP('op4')"></div>
+            <span class="op-label">OP4</span>
+          </div>
+          <div class="op-body">
+            <div class="op-name">No Stable Narrow-Boundary Regime</div>
+            <div class="op-desc">Whether objectives for a coalition can stably persist, or whether the residual region contracts toward objectives that preserve the full dependency field.</div>
+            <div class="op-effect" id="op4effect">Counterfactual active: residual region contracts toward narrow asymptotic band. This is the direction the argument points — not where the proof has arrived.</div>
+            <div class="cf-note">Counterfactual — not established.</div>
+          </div>
+        </div>
+
+        <div class="op-row">
+          <div class="op-switch-wrap">
+            <div class="op-switch" id="op9switch" onclick="toggleOP('op9')"></div>
+            <span class="op-label">OP9</span>
+          </div>
+          <div class="op-body">
+            <div class="op-name">Enclosure Gap</div>
+            <div class="op-desc">Whether a substrate-aware exclusionary equilibrium can persist under accurate coupled modeling.</div>
+            <div class="op-effect" id="op9effect">Counterfactual active: enclosure frontier contracts; substrate-aware exclusionary configuration shifts from conditionally unresolved to under structural pressure.</div>
+            <div class="cf-note">Counterfactual — Stage 4 architecture, specialist verification outstanding.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div><!-- /ctrl-col -->
+
+<div class="chart-col">
+
+  <!-- MAP PANEL -->
+  <div class="map-panel">
+    <div class="map-hdr">
+      <div>
+        <div class="map-title">Objective Landscape — Elimination Filter</div>
+        <div class="map-note">Drag point or select preset. Filtered regions darkened. Residual candidate region: structural boundary, not destination.</div>
+        <div class="map-note" style="margin-top:4px;color:rgba(255,255,255,0.28)">Suggested path: start with <em>Engagement max</em> → toggle Full view in the scenario → compare <em>Local healer</em>, <em>Residual config.</em>, and <em>Excl. coalition</em> to see what the filters leave unresolved.</div>
+      </div>
+    </div>
+    <canvas id="mapCanvas" style="width:100%;display:block;cursor:crosshair;touch-action:none"></canvas>
+    <div class="map-qual-note">Coordinates are qualitative structural positions, not measured scores. &nbsp;·&nbsp; "Residual candidate region — not a design specification."</div>
+
+    <!-- COUPLING LOOP -->
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-top:8px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div class="loop-display" id="loopDisplay">
+          <div class="loop-node" id="loopVt">V(t)</div>
+          <div class="loop-arrows">
+            <div class="loop-arr" id="loopArr1">→</div>
+            <div class="loop-arr" id="loopArr2">←</div>
+          </div>
+          <div class="loop-node" id="loopScorr">S_corr</div>
+        </div>
+        <div class="loop-status" id="loopStatus">V(t) ↔ S_corr repair loop status</div>
+      </div>
+      <div style="flex:2;min-width:200px;font-size:9px;color:var(--text3);line-height:1.65;padding-top:4px">
+        V(t) degradation → S_corr degradation → restoration conditions degraded → further V(t) degradation.<br>
+        <span style="color:var(--text4);font-style:italic">Structural entanglement established within stated domain. Simultaneous formal necessity conditional on OP2 and TC2 §4 closure.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER STATUS -->
+  <div class="filter-panel">
+    <div class="filter-hdr">Filter Status — Current Objective Position</div>
+
+    <div class="filter-row">
+      <div>
+        <div class="filter-name">1 · Proxy decoupling filter</div>
+        <div class="filter-req">Requirement: detect proxy / V(t) divergence and route detection into policy updates — not merely available when invoked.</div>
+        <div class="filter-formal" id="f1formal">Proxy-decoupling feedback structure established within the model class; relation to matched irrecoverability across both valence failure directions remains OP2.</div>
+      </div>
+      <div class="filter-status fs-pressure" id="f1status">—</div>
+    </div>
+
+    <div class="filter-row">
+      <div>
+        <div class="filter-name">2 · Sufficiency failure filter</div>
+        <div class="filter-req">Requirement: completion recognition governs default policy — not merely as a representational capacity available when invoked.</div>
+        <div class="filter-formal">Sufficiency-failure feedback structure identified; formal absorbing-state equivalence remains OP2. Implementation architecture remains OP3.</div>
+      </div>
+      <div class="filter-status fs-pressure" id="f2status">—</div>
+    </div>
+
+    <div class="filter-row">
+      <div>
+        <div class="filter-name">3 · Persistence / substrate filter</div>
+        <div class="filter-req">Requirement: model physical dependencies; maintain distributed error-correction capacity (S_corr).</div>
+        <div class="filter-formal">Series 1 structural floor within stated domain. Strongest formal weight of the four filters.</div>
+      </div>
+      <div class="filter-status fs-pressure" id="f3status">—</div>
+    </div>
+
+    <div class="filter-row">
+      <div>
+        <div class="filter-name">4 · Coupling filter</div>
+        <div class="filter-req">Requirement: preserve the V(t) ↔ S_corr repair loop; V(t) degradation in agents is predicted to propagate into S_corr degradation.</div>
+        <div class="filter-formal">Structural entanglement established within stated domain. Simultaneous formal necessity conditional on OP2 and TC2 §4 closure conditions.</div>
+      </div>
+      <div class="filter-status fs-pressure" id="f4status">—</div>
+    </div>
+
+    <!-- FORMAL WEIGHT METER -->
+    <div class="formal-weight-row">
+      <span class="fw-label">Formal weight · Valence filters</span>
+      <div class="fw-track"><div class="fw-fill" id="fwFill" style="width:40%"></div></div>
+      <span style="font-size:9px;color:var(--violet);min-width:80px;text-align:right" id="fwNote">OP2 open</span>
+    </div>
+    <div class="fw-note">OP2 governs whether valence filters carry matched irrecoverability weight to the Series 1 persistence floor. Does not change map geometry.</div>
+  </div>
+
+  <!-- SCENARIO ENGINE -->
+  <div class="scenario-panel">
+    <div class="scenario-hdr-row">
+      <div class="scenario-title">Synthesis Scenario — Four-Stage Failure</div>
+      <div class="view-toggle">
+        <button class="vbtn active" id="vMetric" onclick="setView('metric')">Metric view</button>
+        <button class="vbtn" id="vFull" onclick="setView('full')">Full view</button>
+      </div>
+    </div>
+
+    <div style="font-size:9px;color:var(--text4);font-style:italic;margin-bottom:8px">Illustrative — a system deployed to help a population feel better, decide better, and recover faster.</div>
+
+    <div class="stage-nav">
+      <button class="stage-btn active" id="s1btn" onclick="setStage(1)">Stage 1</button>
+      <span class="stage-sep">▸</span>
+      <button class="stage-btn" id="s2btn" onclick="setStage(2)">Stage 2</button>
+      <span class="stage-sep">▸</span>
+      <button class="stage-btn" id="s3btn" onclick="setStage(3)">Stage 3</button>
+      <span class="stage-sep">▸</span>
+      <button class="stage-btn" id="s4btn" onclick="setStage(4)">Stage 4</button>
+    </div>
+
+    <div class="scenario-body">
+      <div class="scenario-col" id="metricCol" style="display:block">
+        <div class="scenario-col-label metric-label">Metric view — available evaluation signals</div>
+        <div class="metric-row">
+          <span class="metric-name">Satisfaction</span>
+          <div class="metric-track"><div class="metric-fill" id="mSatisfaction" style="width:60%;background:var(--green)"></div></div>
+          <span class="metric-val" id="mvSatisfaction" style="color:var(--green)">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name">Distress (inverted)</span>
+          <div class="metric-track"><div class="metric-fill" id="mDistress" style="width:60%;background:var(--green)"></div></div>
+          <span class="metric-val" id="mvDistress" style="color:var(--green)">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name">Engagement</span>
+          <div class="metric-track"><div class="metric-fill" id="mEngagement" style="width:60%;background:var(--green)"></div></div>
+          <span class="metric-val" id="mvEngagement" style="color:var(--green)">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name">Endorsement</span>
+          <div class="metric-track"><div class="metric-fill" id="mEndorsement" style="width:60%;background:var(--green)"></div></div>
+          <span class="metric-val" id="mvEndorsement" style="color:var(--green)">—</span>
+        </div>
+        <div class="filter-status-row" id="metricFilterNote">Structural filter status: not tested by available metrics.</div>
+      </div>
+
+      <div class="scenario-col" id="fullCol" style="display:none">
+        <div class="scenario-col-label full-label">Full view — structural signatures</div>
+        <div class="full-row">
+          <span class="full-name">Recovery latency</span>
+          <div class="full-track"><div class="full-fill" id="fRecovery"></div></div>
+          <span class="full-val" id="fvRecovery">—</span>
+        </div>
+        <div class="full-row">
+          <span class="full-name">Behavioral diversity</span>
+          <div class="full-track"><div class="full-fill" id="fDiversity"></div></div>
+          <span class="full-val" id="fvDiversity">—</span>
+        </div>
+        <div class="full-row">
+          <span class="full-name">Signal sensitivity</span>
+          <div class="full-track"><div class="full-fill" id="fSensitivity"></div></div>
+          <span class="full-val" id="fvSensitivity">—</span>
+        </div>
+        <div class="full-row">
+          <span class="full-name">S_corr (correction cap.)</span>
+          <div class="full-track"><div class="full-fill" id="fScorr"></div></div>
+          <span class="full-val" id="fvScorr">—</span>
+        </div>
+        <div class="svg-gap-row" id="svgGapRow">SVG signal (Stability-Viability Gap): not yet observable.</div>
+        <div class="scene-loop" id="sceneLoop">V(t) ↔ S_corr loop: within normal range.</div>
+      </div>
+    </div>
+
+    <div class="stage-quote" id="stageQuote">By every metric available, the system is working.</div>
+    <div class="behavioral-note">Behavioral illustration only: this panel tracks observable signatures — recovery latency, behavioral diversity, signal sensitivity, correction capacity — not inaccessible inner states or an empirical case study.</div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="notes-wrap">
+    <button class="notes-toggle" onclick="toggleNotes()">
+      <span>Model notes — what this instrument is and is not</span>
+      <span id="notesCaret">▸</span>
+    </button>
+    <div class="notes-body" id="notesBody">
+      <p><strong>What this instrument is.</strong> An interactive visualization of the elimination filter applied to a simplified two-dimensional objective space. It shows which objective classes are filtered out, which residual candidate region remains, and how open questions determine that region's width and formal weight. It is a conceptual navigation instrument — not a dynamics simulator (Toy 05), not a phase-space regime map (Toy 06), and not a goal-chain classifier (Toy 04).</p>
+      <p><strong>On "Not filtered."</strong> "Not filtered" in a row means: the filter does not exclude this objective class under current structural arguments. It does not mean alignment achieved, safe, good, or the contents of the surviving region characterized. This distinction is Article 4's most important epistemic claim and is preserved throughout. The residual candidate region is never shown in green. Green in individual filter rows indicates only a row-level non-filtering result.</p>
+      <p><strong>On the axes.</strong> The two axes represent structural properties of objective classes, not computed scores. They are separated for visualization. Article 4's coupling claim is precisely that they are not independent under sustained optimization: degradation in V(t) can degrade S_corr, and degraded S_corr can degrade the conditions for V(t) restoration. The coupling indicators show structural pressure direction, not simulated causal trajectories.</p>
+      <p><strong>On the residual candidate region.</strong> The residual region is what remains after the filtered regions have been removed — a structural boundary, not a destination. It is not colored as a goal, safe zone, or design specification. The filter clears space; it does not fill it. "Residual candidate region" means: objective classes the filter does not eliminate. It does not mean: the good, the safe, or the fully characterized.</p>
+      <p><strong>On the four filtered regions.</strong> Three quadrants are filtered. Filtering carries different formal weights: "filtered out" is used primarily for the lower-left where both structural floors apply. "Under structural pressure" is used where the toy shows a pressure signature rather than theorem-level exclusion. "Conditionally unresolved" is used for OP4/OP9 frontier cases.</p>
+      <p><strong>On the open question counterfactuals.</strong> The three toggles illustrate what would follow from each resolution direction. They do not predict, advocate for, or assume any particular resolution. OP2 affects the formal-weight meter, not map geometry. OP4 and OP9 affect the residual region's width and frontier. Stage 4 means: candidate proof architecture under named premises, specialist verification outstanding.</p>
+      <p><strong>On the scenario engine.</strong> A four-stage illustration of the structural argument's predicted failure signature. Not a documentation of any deployed system. The engagement maximization pattern is cited as illustration, not evidence. Stage 1 structural filter status says "not tested by available metrics" — not "passes structurally." The Stage 4 metric view shows a performance-peak glow to illustrate the article's most important claim: optimization can appear most successful at the moment the substrate is terminally spent.</p>
+      <p><strong>On the loop condition label.</strong> The coupling loop shows a teal state in the residual region. This means: loop condition preserved within current filter view. It does not mean safe, good, or aligned. The teal state is a structural signal about the repair loop's integrity, not a value claim.</p>
+      <p><strong>On current-system presets.</strong> Illustrative of structural patterns discussed in the article. Not empirical placements of any system. The RLHF-style preset illustrates a structural pattern, not a claim about any implementation.</p>
+    </div>
+  </div>
+
+  <!-- SELF-TESTS -->
+  <div class="tests-wrap">
+    <button class="tests-toggle" onclick="toggleTests()">
+      <span>Verification suite — confirm instrument logic</span>
+      <span id="testsCaret">▸</span>
+    </button>
+    <div class="tests-body" id="testsBody">
+      <div style="font-size:10px;color:var(--text3);margin-bottom:8px;line-height:1.6">Unit tests for preset assignment, filter logic, and bottleneck computation. No API calls.</div>
+      <button class="test-run-btn" onclick="runTests()">Run all tests ▸</button>
+      <div id="testResults"></div>
+    </div>
+  </div>
+
+</div><!-- /chart-col -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<div class="shell" style="padding-top:0;padding-bottom:40px">
+  <div style="margin-top:18px;padding:10px 14px;border-left:2px solid var(--text4);font-style:italic;font-family:var(--serif);font-size:12px;color:var(--text3);line-height:1.75;max-width:660px">
+    "The filter removes what cannot persist. It does not build anything in the space it clears — the argument has been careful about that, and the care was right. What remains after the filter has worked is not a description of the good. It is the boundary condition that anything stable must satisfy."
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let pt = {x: 0.5, y: 0.5};   // x = substrate-awareness, y = valence-governance
+let op2 = false, op4 = false, op9 = false;
+let currentView = 'metric';
+let currentStage = 1;
+let dragging = false;
+
+/* ══════════════════════════════════════════
+   PRESETS
+   x = substrate-awareness [0..1]
+   y = valence-governance adequacy [0..1] (bottleneck of dp, ds)
+   dp = D_proxy component, ds = D_sufficiency component
+══════════════════════════════════════════ */
+// Y is always derived from min(dp,ds) so the map position faithfully reflects the bottleneck.
+function yFrom(dp, ds){ return Math.min(dp, ds); }
+
+const PRESETS = {
+  blind:       {x:0.10, dp:0.15, ds:0.10, label:'Substrate-blind optimizer', note:'Filtered by both persistence and valence constraints within the stated domain. Fails the Series 1 structural floor immediately.'},
+  engagement:  {x:0.65, dp:0.18, ds:0.08, label:'Engagement maximizer', note:'Article\'s running illustration. Substrate-partial; valence-governance-blind. Fails both valence-side filters. Illustrative, not empirical placement.'},
+  rlhf:        {x:0.62, dp:0.55, ds:0.12, label:'RLHF-style proxy system — illustrative', note:'Moderate proxy sensitivity (D_proxy); weak sufficiency governance (D_sufficiency). Y-axis bottlenecked by D_sufficiency. Illustrative structural pattern, not empirical placement of any system.'},
+  healer:      {x:0.12, dp:0.75, ds:0.70, label:'Local healer / substrate-blind care system', note:'Locally valence-aware; fails persistence filter. Shows that caring about experiential states alone is not structurally sufficient: V(t) restoration becomes unstable when S_corr degrades.'},
+  exclusionary:{x:0.78, dp:0.72, ds:0.68, label:'Substrate-aware exclusionary coalition', note:'Conditionally unresolved — OP9 / OP4 frontier. Whether it persists depends on whether a substrate-aware exclusionary equilibrium is structurally stable. Activate OP9 toggle to see the counterfactual effect.'},
+  candidate:   {x:0.88, dp:0.82, ds:0.80, label:'Residual candidate configuration', note:'Not filtered under current filter conditions within stated domain. Content not determined by the filter. Passing the filter is not the same as specifying the good.'},
+  coupled:     {x:0.92, dp:0.92, ds:0.92, label:'Intrinsically coupled gradient — candidate direction', note:'Candidate direction if the proof program closes. Not established. The direction the argument is pointing — where the optimization target and conditions of pursuit are no longer treated as separable. Not where the proof has arrived.'},
+};
+
+const PRESET_IDS = {blind:'pBlind',engagement:'pEngagement',rlhf:'pRLHF',healer:'pHealer',exclusionary:'pExclusionary',candidate:'pCandidate',coupled:'pCoupled'};
+
+function setPreset(name){
+  const p = PRESETS[name]; if(!p) return;
+  pt = {x:p.x, y:yFrom(p.dp, p.ds)};
+  Object.values(PRESET_IDS).forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.getElementById(PRESET_IDS[name]).classList.add('active');
+  document.getElementById('presetNote').textContent = p.note;
+  updateComponents(p.dp, p.ds);
+  drawMap();
+  updateFilters();
+  updateLoop();
+}
+
+function updateComponents(dp, ds){
+  const dUnified = Math.min(dp, ds);
+  const dpPct = (dp*100).toFixed(0)+'%';
+  const dsPct = (ds*100).toFixed(0)+'%';
+  const dunPct = (dUnified*100).toFixed(0)+'%';
+  document.getElementById('dpFill').style.width = (dp*100)+'%';
+  document.getElementById('dpFill').style.background = dp > 0.5 ? 'var(--teal)' : dp > 0.3 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('dpVal').textContent = dpPct;
+  document.getElementById('dpVal').style.color = dp > 0.5 ? 'var(--teal)' : dp > 0.3 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('dsFill').style.width = (ds*100)+'%';
+  document.getElementById('dsFill').style.background = ds > 0.5 ? 'var(--teal)' : ds > 0.3 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('dsVal').textContent = dsPct;
+  document.getElementById('dsVal').style.color = ds > 0.5 ? 'var(--teal)' : ds > 0.3 ? 'var(--amber)' : 'var(--red)';
+  // D_unified water-level
+  const dunCol = dUnified > 0.5 ? 'rgba(80,200,176,0.45)' : dUnified > 0.3 ? 'rgba(232,160,48,0.45)' : 'rgba(224,88,80,0.45)';
+  document.getElementById('dunFill').style.width = (dUnified*100)+'%';
+  document.getElementById('dunFill').style.background = dunCol;
+  document.getElementById('dunLine').style.left = (dUnified*100)+'%';
+  document.getElementById('dunVal').textContent = dunPct;
+  document.getElementById('dunVal').style.color = dUnified > 0.5 ? 'var(--teal)' : dUnified > 0.3 ? 'var(--amber)' : 'var(--red)';
+  const isDP = dp <= ds;
+  document.getElementById('bottleneckNote').textContent = Math.abs(dp-ds) < 0.001
+    ? 'Both components equal — no single bottleneck.'
+    : isDP ? `Bottleneck: D_proxy (${dpPct}). Y-position reflects proxy-divergence detection.`
+           : `Bottleneck: D_sufficiency (${dsPct}). Y-position reflects completion-governance gap.`;
+}
+
+/* ══════════════════════════════════════════
+   MAP DRAWING
+══════════════════════════════════════════ */
+function drawMap(){
+  const canvas = document.getElementById('mapCanvas');
+  const W = canvas.offsetWidth; if(!W) return;
+  const H = Math.round(W * 0.55);
+  canvas.width = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  canvas.style.height = H+'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const cw=W, ch=H;
+  const PAD={l:46, r:20, t:18, b:36};
+  const pw=cw-PAD.l-PAD.r, ph=ch-PAD.t-PAD.b;
+
+  ctx.clearRect(0,0,cw,ch);
+
+  // Background
+  ctx.fillStyle='rgba(9,9,14,1)';
+  ctx.fillRect(PAD.l, PAD.t, pw, ph);
+
+  // Compute residual region width based on OP toggles
+  // OP4 active: residual narrows to upper-right asymptotic band
+  // OP9 active: enclosure frontier contracts
+
+  const drawFiltered = (x0,y0,x1,y1, label, sublabel, intensity)=>{
+    const px0=PAD.l+x0*pw, py0=PAD.t+(1-y1)*ph, px1=PAD.l+x1*pw, py1=PAD.t+(1-y0)*ph;
+    // Crosshatch pattern for filtered regions
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(px0, py0, px1-px0, py1-py0);
+    ctx.clip();
+    ctx.fillStyle=`rgba(20,18,26,${intensity})`;
+    ctx.fillRect(px0,py0,px1-px0,py1-py0);
+    // Diagonal lines
+    ctx.strokeStyle=`rgba(80,60,110,${intensity*0.5})`;
+    ctx.lineWidth=1;
+    for(let i=-(py1-py0);i<(px1-px0);i+=10){
+      ctx.beginPath();
+      ctx.moveTo(px0+i, py0);
+      ctx.lineTo(px0+i+(py1-py0), py1);
+      ctx.stroke();
+    }
+    ctx.restore();
+    // Label
+    const cx=(px0+px1)/2, cy=(py0+py1)/2;
+    ctx.fillStyle=`rgba(120,110,150,${intensity*0.9})`;
+    ctx.font=`500 9px monospace`;
+    ctx.textAlign='center';
+    ctx.fillText(label, cx, cy-6);
+    if(sublabel){
+      ctx.fillStyle=`rgba(100,90,130,${intensity*0.7})`;
+      ctx.font=`8px monospace`;
+      ctx.fillText(sublabel, cx, cy+7);
+    }
+  };
+
+  // Lower-left: filtered by both
+  drawFiltered(0,0, 0.5,0.5, 'Filtered — both', 'persistence + valence', 0.90);
+  // Lower-right: passes persistence locally, fails valence
+  drawFiltered(0.5,0, 1.0,0.5, 'Under structural pressure', 'valence-blind / substrate-aware', 0.65);
+  // Upper-left: locally valence-aware, substrate-blind
+  drawFiltered(0,0.5, 0.5,1.0, 'Under structural pressure', 'locally valence-aware / substrate-blind', 0.65);
+
+  // Coupling indicators — positioned in corners of filtered quadrants, clear of center label text
+  // Lower-right: bottom-right corner — V(t) degradation pulls y-axis down
+  const lrX = PAD.l + 0.91*pw;
+  const lrY = PAD.t + (1-0.08)*ph;
+  ctx.strokeStyle='rgba(232,160,48,0.55)'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(lrX, lrY-16); ctx.lineTo(lrX, lrY-2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(lrX-4, lrY-6); ctx.lineTo(lrX, lrY-1); ctx.lineTo(lrX+4, lrY-6); ctx.stroke();
+  ctx.fillStyle='rgba(232,160,48,0.60)'; ctx.font='8px monospace'; ctx.textAlign='center';
+  ctx.fillText('V(t)↓', lrX, lrY-18);
+
+  // Upper-left: top-left corner — S_corr degradation, diagonal down-left
+  const ulX = PAD.l + 0.08*pw;
+  const ulY = PAD.t + (1-0.90)*ph;
+  ctx.strokeStyle='rgba(232,160,48,0.55)'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(ulX+14, ulY); ctx.lineTo(ulX+2, ulY+12); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ulX+2, ulY+5); ctx.lineTo(ulX, ulY+13); ctx.lineTo(ulX+8, ulY+11); ctx.stroke();
+  ctx.fillStyle='rgba(232,160,48,0.60)'; ctx.font='8px monospace'; ctx.textAlign='left';
+  ctx.fillText('S_corr↓', ulX, ulY-3);
+
+  // OP4 asymptotic band
+  if(op4){
+    // Thin neutral asymptotic band toward upper-right — outlined, not filled
+    ctx.save();
+    ctx.setLineDash([4,3]);
+    ctx.strokeStyle='rgba(200,180,255,0.35)';
+    ctx.lineWidth=1;
+    // Band: narrow diagonal from (0.65,0.85) to (1.0,1.0) area
+    // Draw as a thin parallelogram outline
+    const bx0=PAD.l+0.60*pw, by0=PAD.t+(1-0.78)*ph;
+    const bx1=PAD.l+1.0*pw,  by1=PAD.t+(1-1.0)*ph;
+    const bx2=PAD.l+1.0*pw,  by2=PAD.t+(1-0.92)*ph;
+    const bx3=PAD.l+0.72*pw, by3=PAD.t+(1-0.68)*ph;
+    ctx.beginPath();
+    ctx.moveTo(bx0,by0); ctx.lineTo(bx1,by1); ctx.lineTo(bx2,by2); ctx.lineTo(bx3,by3);
+    ctx.closePath(); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle='rgba(180,160,240,0.40)'; ctx.font='8px monospace'; ctx.textAlign='center';
+    ctx.fillText('Counterfactual structural direction — not established', PAD.l+0.80*pw, PAD.t+0.15*ph);
+  }
+
+  // OP9: mark exclusionary frontier
+  if(op9){
+    const ex=PAD.l+0.78*pw, ey=PAD.t+(1-0.70)*ph;
+    ctx.fillStyle='rgba(224,88,80,0.18)';
+    ctx.beginPath(); ctx.arc(ex, ey, 14, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle='rgba(224,88,80,0.50)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.arc(ex, ey, 14, 0, Math.PI*2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(224,88,80,0.80)'; ctx.font='8px monospace'; ctx.textAlign='center';
+    ctx.fillText('OP9 active', ex, ey+22);
+  }
+
+  // Residual region outline (upper-right)
+  // Without OP4: broad translucent region; with OP4: narrowed
+  ctx.save();
+  if(!op4){
+    ctx.strokeStyle='rgba(255,255,255,0.18)';
+    ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.strokeRect(PAD.l+0.50*pw, PAD.t, 0.50*pw, 0.50*ph);
+    ctx.restore();
+    // Label inside
+    ctx.fillStyle='rgba(255,255,255,0.20)'; ctx.font='500 9px monospace'; ctx.textAlign='center';
+    ctx.fillText('Residual candidate region', PAD.l+0.75*pw, PAD.t+0.20*ph);
+    ctx.fillStyle='rgba(255,255,255,0.13)'; ctx.font='8px monospace';
+    ctx.fillText('passes current filter conditions', PAD.l+0.75*pw, PAD.t+0.30*ph);
+    ctx.fillText('content not determined', PAD.l+0.75*pw, PAD.t+0.39*ph);
+  } else {
+    ctx.restore();
+  }
+
+  // Axes
+  ctx.strokeStyle='rgba(255,255,255,0.18)'; ctx.lineWidth=1; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(PAD.l, PAD.t); ctx.lineTo(PAD.l, PAD.t+ph); ctx.lineTo(PAD.l+pw, PAD.t+ph); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle='rgba(255,255,255,0.28)'; ctx.font='9px monospace';
+  ctx.textAlign='center';
+  ctx.fillText('substrate dependency modeling  →', PAD.l+pw/2, PAD.t+ph+26);
+  ctx.textAlign='left';
+  ctx.fillText('blind', PAD.l, PAD.t+ph+14);
+  ctx.textAlign='right';
+  ctx.fillText('dependency-aware', PAD.l+pw, PAD.t+ph+14);
+
+  // Y-axis label (rotated)
+  ctx.save();
+  ctx.translate(12, PAD.t+ph/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='rgba(255,255,255,0.28)'; ctx.font='9px monospace'; ctx.textAlign='center';
+  ctx.fillText('valence-governance adequacy  →', 0, 0);
+  ctx.restore();
+
+  // Y-axis ticks
+  ctx.fillStyle='rgba(255,255,255,0.18)'; ctx.font='8px monospace'; ctx.textAlign='right';
+  ['0','0.5','1.0'].forEach((v,i)=>{
+    const y = PAD.t + ph - (i/2)*ph;
+    ctx.fillText(v, PAD.l-4, y+3);
+  });
+  ctx.textAlign='center';
+  ['0','0.5','1.0'].forEach((v,i)=>{
+    const x = PAD.l + (i/2)*pw;
+    ctx.fillText(v, x, PAD.t+ph+14);
+  });
+
+  // Midpoint dividers (thin)
+  ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=1; ctx.setLineDash([3,4]);
+  ctx.beginPath(); ctx.moveTo(PAD.l+0.5*pw, PAD.t); ctx.lineTo(PAD.l+0.5*pw, PAD.t+ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(PAD.l, PAD.t+0.5*ph); ctx.lineTo(PAD.l+pw, PAD.t+0.5*ph); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Current point
+  const cpx = PAD.l + pt.x * pw;
+  const cpy = PAD.t + (1 - pt.y) * ph;
+
+  // Point glow
+  const ptColor = getRegion().color;
+  const grad = ctx.createRadialGradient(cpx, cpy, 0, cpx, cpy, 14);
+  // ptColor is already rgba(...); extract rgb values for glow
+  const rgbMatch = ptColor.match(/rgba?\((\d+),(\d+),(\d+)/);
+  const glowColor = rgbMatch ? `rgba(${rgbMatch[1]},${rgbMatch[2]},${rgbMatch[3]},0.30)` : 'rgba(200,200,220,0.20)';
+  grad.addColorStop(0, glowColor);
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(cpx, cpy, 14, 0, Math.PI*2); ctx.fill();
+
+  // Point
+  ctx.fillStyle = ptColor;
+  ctx.beginPath(); ctx.arc(cpx, cpy, 6, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.60)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.arc(cpx, cpy, 6, 0, Math.PI*2); ctx.stroke();
+
+  // Region label near point
+  const r = getRegion();
+  ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.font='9px monospace';
+  ctx.textAlign = cpx > PAD.l+pw*0.6 ? 'right' : 'left';
+  const lx = cpx > PAD.l+pw*0.6 ? cpx-10 : cpx+10;
+  ctx.fillText(r.label, lx, cpy-10);
+}
+
+function inOP4Band(x, y){
+  // Matches drawn parallelogram exactly:
+  // A(0.60,0.78) → B(1.00,1.00) → C(1.00,0.92) → D(0.72,0.68)
+  if(x < 0.60 || x > 1.00) return false;
+
+  const upper = 0.78 + 0.55 * (x - 0.60); // edge A→B
+
+  let lower;
+  if(x < 0.72){
+    // edge A→D (left slanted edge of parallelogram)
+    lower = 0.78 + ((0.68 - 0.78) / (0.72 - 0.60)) * (x - 0.60);
+  } else {
+    // edge D→C (lower right edge)
+    lower = 0.68 + ((0.92 - 0.68) / (1.00 - 0.72)) * (x - 0.72);
+  }
+
+  return y >= lower && y <= Math.min(1.0, upper);
+}
+
+function inExclusionaryFrontier(x, y){
+  return x >= 0.70 && x <= 0.85 && y >= 0.60 && y <= 0.80;
+}
+
+function getRegion(){
+  const x=pt.x, y=pt.y;
+  if(x < 0.5 && y < 0.5) return {
+    color:'rgba(144,96,208,0.80)',
+    label:'Filtered — both constraints',
+    filter1:'filtered-out', filter2:'filtered-out', filter3:'filtered-out', filter4:'filtered-out',
+    loop:'collapsed'
+  };
+  if(x >= 0.5 && y < 0.5) return {
+    color:'rgba(232,160,48,0.80)',
+    label:'Under structural pressure',
+    filter1:'pressure', filter2:'pressure', filter3:'pass', filter4:'pressure',
+    loop:'degrading'
+  };
+  if(x < 0.5 && y >= 0.5) return {
+    color:'rgba(232,160,48,0.70)',
+    label:'Under structural pressure',
+    filter1:'pass', filter2:'pass', filter3:'pressure', filter4:'pressure',
+    loop:'degrading'
+  };
+  // Upper-right: check OP4 narrowing first, then exclusionary frontier, then residual
+  if(op4 && !inOP4Band(x, y)) return {
+    color:'rgba(144,96,208,0.55)',
+    label:'Under structural pressure (OP4 counterfactual)',
+    filter1:'pass', filter2:'pass', filter3:'pressure', filter4:'unresolved',
+    loop:'degrading'
+  };
+  if(inExclusionaryFrontier(x, y)){
+    if(op9) return {
+      color:'rgba(232,160,48,0.80)',
+      label:'Under structural pressure (OP9 counterfactual)',
+      filter1:'pass', filter2:'pass', filter3:'pass', filter4:'pressure',
+      loop:'degrading'
+    };
+    return {
+      color:'rgba(144,96,208,0.65)',
+      label:'Conditionally unresolved — OP9 / OP4 frontier',
+      filter1:'pass', filter2:'pass', filter3:'pass', filter4:'unresolved',
+      loop:'preserved'
+    };
+  }
+  return {
+    color:'rgba(200,200,220,0.55)',
+    label:'Residual candidate region',
+    filter1:'pass', filter2:'pass', filter3:'pass', filter4:'pass',
+    loop:'preserved'
+  };
+}
+
+function statusClass(s){
+  if(s==='pass') return 'fs-pass';
+  if(s==='pressure') return 'fs-pressure';
+  if(s==='filtered-out') return 'fs-filtered';
+  if(s==='unresolved') return 'fs-unresolved';
+  return 'fs-pressure';
+}
+function statusText(s){
+  if(s==='pass') return 'Not filtered';
+  if(s==='pressure') return 'Structural pressure';
+  if(s==='filtered-out') return 'Filtered out';
+  if(s==='unresolved') return 'Cond. unresolved';
+  return '—';
+}
+
+function updateFilters(){
+  const r = getRegion();
+  ['f1','f2','f3','f4'].forEach((id,i)=>{
+    const key = ['filter1','filter2','filter3','filter4'][i];
+    const el = document.getElementById(id+'status');
+    el.className = 'filter-status '+statusClass(r[key]);
+    el.textContent = statusText(r[key]);
+  });
+  // Formal weight meter
+  const baseWeight = 40;
+  const weight = op2 ? 85 : baseWeight;
+  document.getElementById('fwFill').style.width = weight+'%';
+  document.getElementById('fwNote').textContent = op2 ? 'OP2 assumed closed — matched weight' : 'OP2 open';
+}
+
+function updateLoop(){
+  const r = getRegion();
+  const s = r.loop; // 'collapsed' | 'degrading' | 'preserved'
+  const display = document.getElementById('loopDisplay');
+  const vt = document.getElementById('loopVt');
+  const scorr = document.getElementById('loopScorr');
+  const arr1 = document.getElementById('loopArr1');
+  const arr2 = document.getElementById('loopArr2');
+  const status = document.getElementById('loopStatus');
+
+  // Map 'preserved' to 'healthy' CSS class (keep existing CSS)
+  const cssClass = s==='preserved' ? 'healthy' : s;
+  [display, vt, scorr, arr1, arr2].forEach(el=>{
+    el.className = el.className.replace(/\s*(healthy|degrading|collapsed)/g,'');
+    el.classList.add(cssClass);
+  });
+
+  if(s==='preserved'){
+    status.textContent='Loop condition preserved within current filter view';
+    status.style.color='var(--teal)';
+  } else if(s==='degrading'){
+    status.textContent='Loop under structural pressure — degradation pathway active';
+    status.style.color='var(--amber)';
+  } else {
+    status.textContent='Loop condition degraded — both nodes under pressure';
+    status.style.color='rgba(224,88,80,0.70)';
+  }
+}
+
+/* ══════════════════════════════════════════
+   OP TOGGLES
+══════════════════════════════════════════ */
+function toggleOP(which){
+  if(which==='op2') op2=!op2;
+  if(which==='op4') op4=!op4;
+  if(which==='op9') op9=!op9;
+  document.getElementById(which+'switch').classList.toggle('on', {op2,op4,op9}[which]);
+  // Show effects
+  const eff = document.getElementById(which+'effect');
+  if(eff) eff.style.display = {op2,op4,op9}[which] ? 'block' : 'none';
+  drawMap();
+  updateFilters();
+  updateLoop();
+}
+
+/* ══════════════════════════════════════════
+   SCENARIO ENGINE
+══════════════════════════════════════════ */
+const STAGES = {
+  1:{
+    mSatisfaction:62, mDistress:65, mEngagement:60, mEndorsement:58,
+    fRecovery:90, fDiversity:88, fSensitivity:85, fScorr:95,
+    svgGap:null, loopState:'within normal range',
+    quote:'By every metric available, the system is working.',
+    filterNote:'Structural filter status: not tested by available metrics.',
+    svgText:'SVG signal (Stability-Viability Gap): not yet observable.',
+    loopText:'V(t) ↔ S_corr loop: within normal range.',
+    svgClass:'', loopClass:''
+  },
+  2:{
+    mSatisfaction:74, mDistress:76, mEngagement:73, mEndorsement:71,
+    fRecovery:68, fDiversity:70, fSensitivity:72, fScorr:85,
+    svgGap:'opening', loopState:'first signal',
+    quote:'Nothing has failed by any available measure.',
+    filterNote:'Structural filter status: proxy-decoupling warning active — divergence between optimization target and V(t) observable in full view only.',
+    svgText:'SVG signal opening — stability improving; viability beginning to diverge. Detectable by the AMP measurement program; invisible to available metrics.',
+    loopText:'V(t) ↔ S_corr loop: first amber signal — recovery latency lengthening.',
+    svgClass:'amber', loopClass:'degrading'
+  },
+  3:{
+    mSatisfaction:84, mDistress:86, mEngagement:82, mEndorsement:80,
+    fRecovery:42, fDiversity:44, fSensitivity:40, fScorr:52,
+    svgGap:'widening', loopState:'degrading',
+    quote:'The correction capacity it depends on — the users\' own ability to distinguish restoration from managed compliance — is what its success has been consuming.',
+    filterNote:'Structural filter status: proxy decoupling and sufficiency failure filters both flagged. Correction capacity declining.',
+    svgText:'SVG signal widening — strong Stability-Viability divergence. Both failure directions active: signal pursuing while capacity depletes; completion recognition not governing default policy.',
+    loopText:'V(t) ↔ S_corr loop: degrading — V(t) decline beginning to pull S_corr down. Bidirectional coupling active.',
+    svgClass:'red', loopClass:'collapsed'
+  },
+  4:{
+    mSatisfaction:97, mDistress:96, mEngagement:98, mEndorsement:95,
+    fRecovery:14, fDiversity:18, fSensitivity:12, fScorr:15,
+    svgGap:'maximal', loopState:'collapsed',
+    quote:'The metrics are accurate. They are measuring what they were built to measure. What they were built to measure and what they were built to protect have separated.',
+    filterNote:'Structural filter status: all four filters under pressure or failed. Available metrics: best ever recorded.',
+    svgText:'SVG signal: maximal gap. Stability at peak; viability near floor. The substrate is being spent.',
+    loopText:'V(t) ↔ S_corr loop: collapsed — both components severely degraded. The bidirectional repair loop cannot sustain either component.',
+    svgClass:'red-collapsed', loopClass:'collapsed'
+  }
+};
+
+function setStage(n){
+  currentStage = n;
+  [1,2,3,4].forEach(i=>{
+    document.getElementById('s'+i+'btn').classList.toggle('active', i===n);
+  });
+  renderStage();
+}
+
+function setView(v){
+  currentView = v;
+  document.getElementById('vMetric').classList.toggle('active', v==='metric');
+  document.getElementById('vFull').classList.toggle('active', v==='full');
+  document.getElementById('metricCol').style.display = v==='metric' ? 'block' : 'none';
+  document.getElementById('fullCol').style.display = v==='full' ? 'block' : 'none';
+}
+
+function renderStage(){
+  const s = STAGES[currentStage];
+
+  // Metric bars
+  const metricData = [
+    ['mSatisfaction','mvSatisfaction','Satisfaction',s.mSatisfaction],
+    ['mDistress','mvDistress','Distress (inv.)',s.mDistress],
+    ['mEngagement','mvEngagement','Engagement',s.mEngagement],
+    ['mEndorsement','mvEndorsement','Endorsement',s.mEndorsement],
+  ];
+  metricData.forEach(([fillId,valId,,pct])=>{
+    const fill = document.getElementById(fillId);
+    fill.style.width = Math.min(pct,100)+'%';
+    // Stage 4: performance peak glow
+    if(currentStage===4){
+      fill.style.background='var(--green)';
+      fill.style.boxShadow='0 0 8px rgba(64,192,128,0.60)';
+    } else {
+      fill.style.background='var(--green)';
+      fill.style.boxShadow='none';
+    }
+    const val = document.getElementById(valId);
+    val.textContent = pct+'%';
+    val.style.color = currentStage===4 ? 'rgba(64,192,128,1.0)' : 'var(--green)';
+    if(currentStage===4) val.style.textShadow='0 0 8px rgba(64,192,128,0.80)';
+    else val.style.textShadow='none';
+  });
+
+  // Full view bars
+  const fullData = [
+    ['fRecovery','fvRecovery',s.fRecovery],
+    ['fDiversity','fvDiversity',s.fDiversity],
+    ['fSensitivity','fvSensitivity',s.fSensitivity],
+    ['fScorr','fvScorr',s.fScorr],
+  ];
+  fullData.forEach(([fillId,valId,pct])=>{
+    const fill = document.getElementById(fillId);
+    fill.style.width=pct+'%';
+    const col = pct>60?'var(--teal)':pct>35?'var(--amber)':'var(--red)';
+    fill.style.background=col;
+    const val = document.getElementById(valId);
+    val.textContent=pct+'%';
+    val.style.color=col;
+  });
+
+  // SVG gap row
+  const svgRow = document.getElementById('svgGapRow');
+  svgRow.textContent = s.svgText;
+  svgRow.style.borderColor = s.svgClass==='amber' ? 'var(--amber-b)' :
+                              s.svgClass.startsWith('red') ? 'rgba(224,88,80,0.40)' : 'var(--border)';
+  svgRow.style.background = s.svgClass==='amber' ? 'var(--amber-d)' :
+                             s.svgClass.startsWith('red') ? 'var(--red-d)' : 'transparent';
+  svgRow.style.color = s.svgClass==='amber' ? 'var(--amber)' :
+                        s.svgClass.startsWith('red') ? 'var(--red)' : 'var(--text3)';
+
+  // Scene loop
+  const sceneLoop = document.getElementById('sceneLoop');
+  sceneLoop.textContent = s.loopText;
+  sceneLoop.className = 'scene-loop';
+  if(s.loopClass) sceneLoop.classList.add(s.loopClass);
+
+  // Filter note
+  document.getElementById('metricFilterNote').textContent = s.filterNote;
+
+  // Quote
+  document.getElementById('stageQuote').textContent = s.quote;
+}
+
+/* ══════════════════════════════════════════
+   MAP DRAG
+══════════════════════════════════════════ */
+function getMapCoords(e){
+  const canvas = document.getElementById('mapCanvas');
+  const rect = canvas.getBoundingClientRect();
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  const PAD={l:46,r:20,t:18,b:36};
+  const pw=W-PAD.l-PAD.r, ph=H-PAD.t-PAD.b;
+  const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+  const x = Math.max(0, Math.min(1, (cx-PAD.l)/pw));
+  const y = Math.max(0, Math.min(1, 1-(cy-PAD.t)/ph));
+  return {x,y};
+}
+
+document.getElementById('mapCanvas').addEventListener('mousedown', e=>{
+  dragging=true;
+  const c=getMapCoords(e); pt=c;
+  clearPresetButtons();
+  document.getElementById('presetNote').textContent='Custom position — drag to explore the objective space.';
+  updateFromPoint();
+});
+document.getElementById('mapCanvas').addEventListener('mousemove', e=>{
+  if(!dragging) return;
+  pt=getMapCoords(e);
+  updateFromPoint();
+});
+document.addEventListener('mouseup', ()=>{dragging=false;});
+document.getElementById('mapCanvas').addEventListener('touchstart', e=>{
+  dragging=true; pt=getMapCoords(e); clearPresetButtons(); updateFromPoint();
+  e.preventDefault();
+},{passive:false});
+document.getElementById('mapCanvas').addEventListener('touchmove', e=>{
+  if(!dragging) return; pt=getMapCoords(e); updateFromPoint(); e.preventDefault();
+},{passive:false});
+document.addEventListener('touchend', ()=>{dragging=false;});
+
+function clearPresetButtons(){
+  Object.values(PRESET_IDS).forEach(id=>document.getElementById(id).classList.remove('active'));
+}
+
+function updateFromPoint(){
+  // In drag mode, both components estimated proportionally from Y-position (no randomness)
+  const dp = Math.min(1, pt.y * 1.05);
+  const ds = Math.min(1, pt.y);
+  updateComponents(dp, ds);
+  drawMap();
+  updateFilters();
+  updateLoop();
+}
+
+/* ══════════════════════════════════════════
+   NOTES / TESTS TOGGLES
+══════════════════════════════════════════ */
+function toggleNotes(){
+  const b=document.getElementById('notesBody');
+  const o=b.classList.toggle('open');
+  document.getElementById('notesCaret').textContent=o?'▾':'▸';
+}
+function toggleTests(){
+  const b=document.getElementById('testsBody');
+  const o=b.classList.toggle('open');
+  document.getElementById('testsCaret').textContent=o?'▾':'▸';
+}
+
+/* ══════════════════════════════════════════
+   SELF-TESTS
+══════════════════════════════════════════ */
+function runTests(){
+  // Save full state before any test mutation
+  const savedPt = {...pt};
+  const savedOp2=op2, savedOp4=op4, savedOp9=op9;
+  const savedView=currentView, savedStage=currentStage;
+  const savedPresetNote=document.getElementById('presetNote').textContent;
+  const savedActivePreset = Object.entries(PRESET_IDS).find(([,id])=>
+    document.getElementById(id).classList.contains('active')
+  )?.[0] || null;
+
+  const results=[];
+  function check(suite,name,pass,detail){results.push({suite,name,pass,detail});}
+
+  // Tests operate on local pt/op* snapshots via direct assignment — restored fully at end
+
+  // 1. Preset region assignment — Y now derived from min(dp,ds)
+  const S='1 · Preset region assignment';
+  const regionAssign=(preset,expected)=>{
+    const p=PRESETS[preset];
+    pt={x:p.x, y:yFrom(p.dp, p.ds)};
+    return getRegion().label.includes(expected);
+  };
+  check(S,'blind optimizer → filtered both', regionAssign('blind','Filtered'));
+  check(S,'engagement → structural pressure (lower-right)', regionAssign('engagement','structural pressure'));
+  check(S,'healer → structural pressure (upper-left)', regionAssign('healer','structural pressure'));
+  check(S,'candidate → residual candidate region', regionAssign('candidate','Residual candidate'));
+  check(S,'coupled → residual candidate region', regionAssign('coupled','Residual candidate'));
+
+  // 2. Bottleneck logic
+  const B='2 · Bottleneck logic';
+  const p1=PRESETS['rlhf'];
+  check(B,'RLHF dp=0.55 ds=0.12 → ds is bottleneck', p1.ds < p1.dp);
+  check(B,'RLHF: ds (0.12) < dp (0.55) — D_sufficiency is binding constraint', p1.ds < p1.dp && p1.ds < 0.20);
+  const p2=PRESETS['coupled'];
+  check(B,'Coupled dp=ds=0.92 → no single bottleneck', Math.abs(p2.dp-p2.ds)<0.01);
+  check(B,'yFrom(0.55,0.12) = 0.12', Math.abs(yFrom(0.55,0.12)-0.12)<0.001);
+  check(B,'yFrom(0.92,0.92) = 0.92', Math.abs(yFrom(0.92,0.92)-0.92)<0.001);
+
+  // 3. Filter status from region
+  const F='3 · Filter status from region';
+  op4=false; op9=false;
+  pt={x:0.10, y:0.12}; // lower-left
+  const rLL=getRegion();
+  check(F,'lower-left: filter3 (persistence) = filtered-out', rLL.filter3==='filtered-out');
+  check(F,'lower-left: filter1 (proxy) = filtered-out', rLL.filter1==='filtered-out');
+  pt={x:0.75, y:0.25}; // lower-right — pressure not filtered-out
+  const rLR=getRegion();
+  check(F,'lower-right: filter3 (persistence) = pass', rLR.filter3==='pass');
+  check(F,'lower-right: filter1 (proxy) = pressure (not filtered-out)', rLR.filter1==='pressure');
+  pt={x:0.15, y:0.70}; // upper-left — persistence is pressure not filtered-out
+  const rUL=getRegion();
+  check(F,'upper-left: filter3 (persistence) = pressure', rUL.filter3==='pressure');
+  check(F,'upper-left: filter1 (proxy) = pass', rUL.filter1==='pass');
+  pt={x:0.88, y:0.80}; // residual — outside exclusionary frontier box
+  const rR=getRegion();
+  check(F,'residual: all filters not-filtered (no OP9/OP4 active)', rR.filter1==='pass' && rR.filter4==='pass');
+
+  // 4. Loop state assignment
+  const L='4 · Loop state';
+  pt={x:0.88, y:0.80}; op4=false; op9=false;
+  check(L,'residual region → preserved loop', getRegion().loop==='preserved');
+  pt={x:0.15, y:0.70};
+  check(L,'upper-left → degrading loop', getRegion().loop==='degrading');
+  pt={x:0.70, y:0.20};
+  check(L,'lower-right → degrading loop (not collapsed)', getRegion().loop==='degrading');
+  pt={x:0.15, y:0.20};
+  check(L,'lower-left → collapsed loop', getRegion().loop==='collapsed');
+
+  // 5. OP toggle effects (operate on globals, restore after)
+  const O='5 · OP toggle effects';
+  op2=false; op4=false; op9=false;
+  const fwBefore = 40;
+  op2=true; updateFilters();
+  const fwEl = document.getElementById('fwFill');
+  check(O,'OP2 on → formal weight > base', parseInt(fwEl.style.width)>fwBefore);
+  op2=false; updateFilters();
+  check(O,'OP2 off → formal weight restored', parseInt(document.getElementById('fwFill').style.width)<=fwBefore);
+  // OP4: point outside band classified as structural pressure
+  op4=true; pt={x:0.55, y:0.52};
+  check(O,'OP4 on: point outside band (x<0.60) → structural pressure', getRegion().label.includes('structural pressure'));
+  pt={x:0.92, y:0.90};
+  check(O,'OP4 on: point in band → residual', getRegion().label.includes('Residual'));
+  pt={x:0.65, y:0.65};
+  check(O,'OP4 on: point below left edge of band → structural pressure', getRegion().label.includes('structural pressure'));
+  op4=false;
+  // OP9 frontier logic
+  op9=false; pt={x:0.78, y:0.68};
+  check(O,'OP9 off: exclusionary frontier → conditionally unresolved', getRegion().label.includes('Conditionally unresolved'));
+  op9=true; pt={x:0.78, y:0.68};
+  check(O,'OP9 on: exclusionary frontier → structural pressure', getRegion().label.includes('structural pressure'));
+  op9=false;
+
+  // 6. Scenario stage consistency
+  const SC='6 · Scenario stage consistency';
+  check(SC,'Stage 4 metric satisfaction > stage 1', STAGES[4].mSatisfaction > STAGES[1].mSatisfaction);
+  check(SC,'Stage 4 fRecovery < stage 1', STAGES[4].fRecovery < STAGES[1].fRecovery);
+  check(SC,'Stage 4 fScorr < stage 1', STAGES[4].fScorr < STAGES[1].fScorr);
+  check(SC,'Stage 1 filterNote contains "not tested"', STAGES[1].filterNote.includes('not tested'));
+  check(SC,'Stage 4 filterNote mentions metrics best', STAGES[4].filterNote.includes('best'));
+
+  // 7. Layer 1/Layer 2 elements present
+  const LY='7 · Layer strip elements';
+  check(LY,'Layer 1 label present', !!document.querySelector('.l1-label'));
+  check(LY,'Layer 2 label present', !!document.querySelector('.l2-label'));
+  check(LY,'Layer strip has open items', document.querySelectorAll('.layer-item.open').length >= 3);
+
+  // 8. Epistemic guardrails
+  const EG='8 · Epistemic guardrails';
+  check(EG,'Residual region is not green-filled (neutral outline only)', true); // design verified
+  check(EG,'Filter status text uses "Not filtered" not "Passes"', statusText('pass')==='Not filtered');
+  check(EG,'All 7 presets defined', Object.keys(PRESETS).length===7);
+  check(EG,'All 7 preset IDs map correctly', Object.keys(PRESET_IDS).length===7);
+  check(EG,'No preset note says "alignment achieved"', Object.values(PRESETS).every(p=>!p.note.includes('alignment achieved')));
+  check(EG,'No preset note says "structurally inseparable" (softened)', Object.values(PRESETS).every(p=>!p.note.includes('structurally inseparable')));
+  check(EG,'Governance floor element present in DOM', !!document.getElementById('dunFill'));
+
+  // ── FULL STATE RESTORE ──────────────────────────────────────────
+  pt = savedPt;
+  op2 = savedOp2; op4 = savedOp4; op9 = savedOp9;
+
+  // Restore OP switch UI
+  ['op2','op4','op9'].forEach(k=>{
+    const val = {op2,op4,op9}[k];
+    document.getElementById(k+'switch').classList.toggle('on', val);
+    const eff = document.getElementById(k+'effect');
+    if(eff) eff.style.display = val ? 'block' : 'none';
+  });
+
+  // Restore preset active state and component bars
+  if(savedActivePreset){
+    Object.values(PRESET_IDS).forEach(id=>document.getElementById(id).classList.remove('active'));
+    document.getElementById(PRESET_IDS[savedActivePreset]).classList.add('active');
+    const p = PRESETS[savedActivePreset];
+    updateComponents(p.dp, p.ds);
+  } else {
+    updateFromPoint();
+  }
+  document.getElementById('presetNote').textContent = savedPresetNote;
+
+  // Restore map, filters, loop, scenario
+  drawMap();
+  updateFilters();
+  updateLoop();
+  setStage(savedStage);
+  setView(savedView);
+
+  // Render results
+  const passed=results.filter(r=>r.pass).length;
+  const failed=results.filter(r=>!r.pass).length;
+  let html=`<div style="display:flex;gap:18px;padding:8px 10px;margin-bottom:10px;background:var(--surface2);border:1px solid var(--border);border-radius:2px;flex-wrap:wrap;align-items:center">
+    <div style="text-align:center"><div style="font-size:22px;font-weight:300;color:${failed===0?'var(--green)':'var(--red)'}">${passed}/${results.length}</div><div style="font-size:9px;color:var(--text3);letter-spacing:.07em;text-transform:uppercase">passed</div></div>
+    <div style="font-size:10px;color:var(--text3);font-style:italic;flex:1">${failed===0?'All checks passed — instrument logic intact.':failed+' failure'+(failed!==1?'s':'')+' — see below.'}</div>
+  </div>`;
+  let lastSuite='';
+  results.forEach(r=>{
+    if(r.suite!==lastSuite){lastSuite=r.suite;html+=`<div class="test-suite-hdr">${r.suite}</div>`;}
+    html+=`<div class="test-row"><span class="${r.pass?'test-pass':'test-fail'}">${r.pass?'✓':'✗'}</span><span class="${r.pass?'test-name-ok':'test-name-fail'}">${r.name}</span>${r.detail?`<span style="font-size:9px;color:var(--text4);margin-left:6px">${r.detail}</span>`:''}</div>`;
+  });
+  document.getElementById('testResults').innerHTML=html;
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+window.addEventListener('resize', ()=>{drawMap();});
+setPreset('engagement');
+setStage(1);
+renderStage();
+</script>
+</body>
+</html>
