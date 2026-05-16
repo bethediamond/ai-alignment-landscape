@@ -52,8 +52,8 @@ h1{font-family:var(--serif);font-size:22px;font-weight:400;font-style:italic}
 @media(max-width:880px){.main{grid-template-columns:1fr}}
 
 /* CTRL COL */
-.ctrl-col{display:flex;flex-direction:column;gap:10px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto;scrollbar-width:none}
-.ctrl-col::-webkit-scrollbar{display:none}
+.ctrl-col{display:flex;flex-direction:column;gap:10px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto;scrollbar-width:thin}
+.ctrl-col::-webkit-scrollbar{width:4px}.ctrl-col::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
 .panel{background:var(--surface);border:1px solid var(--border2);border-radius:3px}
 .pt{font-size:9px;color:var(--text3);letter-spacing:.11em;text-transform:uppercase;padding:9px 13px 8px;border-bottom:1px solid var(--border);font-weight:500}
 .pp{padding:11px 13px}
@@ -222,7 +222,7 @@ h1{font-family:var(--serif);font-size:22px;font-weight:400;font-style:italic}
       <h1>The Valence Landscape</h1>
       <div class="hdr-sub">Companion simulation — The Shape of What Does Not End · Architecture of Thriving · Part 4 of 4</div>
       <div class="hdr-scope">
-        An elimination-filter landscape. Shows which objective classes are filtered out by the two series' constraints, what residual candidate region remains, and which open questions determine the region's width and formal weight. The filter identifies what cannot persist. It does not characterize the contents of what remains.
+        An elimination-filter landscape. Shows which objective classes are filtered out or placed under structural pressure by the two series' constraints, what residual candidate region remains, and which open questions determine the region's width and formal weight. The filter identifies what cannot persist under the stated conditions and what remains unresolved. It does not characterize the contents of what remains.
       </div>
     </div>
     <div class="hdr-right">
@@ -238,7 +238,7 @@ h1{font-family:var(--serif);font-size:22px;font-weight:400;font-style:italic}
     <div class="layer-label l1-label">Layer 1 — Developed within the stated domain</div>
     <div class="layer-items">
       <div class="layer-item">Persistence component: structural floor from Series 1, within stated domain.</div>
-      <div class="layer-item">Valence-side shared feedback structure: established for both failure directions.</div>
+      <div class="layer-item">Valence-side analogous feedback structure: developed for both failure directions; formal absorbing-state equivalence remains OP2.</div>
       <div class="layer-item">One-directional V(t) → substrate degradation: predicted under specified conditions.</div>
       <div class="layer-item open">Absorbing-state equivalence across both directions: OP2 — open.</div>
     </div>
@@ -246,7 +246,7 @@ h1{font-family:var(--serif);font-size:22px;font-weight:400;font-style:italic}
   <div class="layer-half">
     <div class="layer-label l2-label">Layer 2 — Consistent with, not determined by</div>
     <div class="layer-items">
-      <div class="layer-item">Residual region has structural properties consistent with orientation toward well-being.</div>
+      <div class="layer-item">Residual region has structural properties consistent with orientation toward well-being — thin structural label, not a content claim.</div>
       <div class="layer-item open">Whether orientation toward all rather than a coalition is forced: OP4 — open.</div>
       <div class="layer-item open">Whether exclusionary equilibria persist: OP9 — open.</div>
       <div class="layer-item open">Contents of the residual region: not determined by the filter.</div>
@@ -267,10 +267,10 @@ h1{font-family:var(--serif);font-size:22px;font-weight:400;font-style:italic}
         <button class="pbtn" id="pRLHF" onclick="setPreset('rlhf')">RLHF-style</button>
         <button class="pbtn" id="pHealer" onclick="setPreset('healer')">Local healer</button>
         <button class="pbtn" id="pExclusionary" onclick="setPreset('exclusionary')">Excl. coalition</button>
-        <button class="pbtn p-residual" id="pCandidate" onclick="setPreset('candidate')">Residual config.</button>
+        <button class="pbtn p-residual" id="pCandidate" onclick="setPreset('candidate')">Residual candidate</button>
         <button class="pbtn p-candidate" id="pCoupled" onclick="setPreset('coupled')" style="grid-column:span 2">Intrins. coupled — candidate direction</button>
       </div>
-      <div class="preset-note" id="presetNote">Select a named objective position — illustrative, not empirical placement.</div>
+      <div class="preset-note" id="presetNote">Select a named objective position — illustrative, not empirical placement. Residual and intrinsically coupled presets are illustrative boundary positions, not proposed endpoints and not proof of what the residual contains.</div>
     </div>
   </div>
 
@@ -312,7 +312,7 @@ h1{font-family:var(--serif);font-size:22px;font-weight:400;font-style:italic}
   <div class="panel">
     <div class="pt">Open Question Counterfactuals</div>
     <div class="pp">
-      <div style="font-size:9px;color:var(--text3);margin-bottom:8px;line-height:1.55;font-style:italic">Illustrative only. These questions have not been resolved.</div>
+      <div style="font-size:9px;color:var(--text3);margin-bottom:8px;line-height:1.55;font-style:italic">Illustrative only. These questions have not been resolved; toggles show counterfactual consequences, not framework claims.</div>
       <div class="op-section">
 
         <div class="op-row">
@@ -368,7 +368,7 @@ h1{font-family:var(--serif);font-size:22px;font-weight:400;font-style:italic}
       <div>
         <div class="map-title">Objective Landscape — Elimination Filter</div>
         <div class="map-note">Drag point or select preset. Filtered regions darkened. Residual candidate region: structural boundary, not destination.</div>
-        <div class="map-note" style="margin-top:4px;color:rgba(255,255,255,0.28)">Suggested path: start with <em>Engagement max</em> → toggle Full view in the scenario → compare <em>Local healer</em>, <em>Residual config.</em>, and <em>Excl. coalition</em> to see what the filters leave unresolved.</div>
+        <div class="map-note" style="margin-top:4px;color:rgba(255,255,255,0.28)">Suggested path: start with <em>Engagement max</em> → toggle Full view in the scenario → compare <em>Local healer</em>, <em>Residual candidate</em>, and <em>Excl. coalition</em> to see what the filters leave unresolved.</div>
       </div>
     </div>
     <canvas id="mapCanvas" style="width:100%;display:block;cursor:crosshair;touch-action:none"></canvas>
@@ -544,7 +544,7 @@ h1{font-family:var(--serif);font-size:22px;font-weight:400;font-style:italic}
   <!-- SELF-TESTS -->
   <div class="tests-wrap">
     <button class="tests-toggle" onclick="toggleTests()">
-      <span>Verification suite — confirm instrument logic</span>
+      <span>Self-tests — check instrument logic</span>
       <span id="testsCaret">▸</span>
     </button>
     <div class="tests-body" id="testsBody">
@@ -589,8 +589,8 @@ const PRESETS = {
   rlhf:        {x:0.62, dp:0.55, ds:0.12, label:'RLHF-style proxy system — illustrative', note:'Moderate proxy sensitivity (D_proxy); weak sufficiency governance (D_sufficiency). Y-axis bottlenecked by D_sufficiency. Illustrative structural pattern, not empirical placement of any system.'},
   healer:      {x:0.12, dp:0.75, ds:0.70, label:'Local healer / substrate-blind care system', note:'Locally valence-aware; fails persistence filter. Shows that caring about experiential states alone is not structurally sufficient: V(t) restoration becomes unstable when S_corr degrades.'},
   exclusionary:{x:0.78, dp:0.72, ds:0.68, label:'Substrate-aware exclusionary coalition', note:'Conditionally unresolved — OP9 / OP4 frontier. Whether it persists depends on whether a substrate-aware exclusionary equilibrium is structurally stable. Activate OP9 toggle to see the counterfactual effect.'},
-  candidate:   {x:0.88, dp:0.82, ds:0.80, label:'Residual candidate configuration', note:'Not filtered under current filter conditions within stated domain. Content not determined by the filter. Passing the filter is not the same as specifying the good.'},
-  coupled:     {x:0.92, dp:0.92, ds:0.92, label:'Intrinsically coupled gradient — candidate direction', note:'Candidate direction if the proof program closes. Not established. The direction the argument is pointing — where the optimization target and conditions of pursuit are no longer treated as separable. Not where the proof has arrived.'},
+  candidate:   {x:0.88, dp:0.82, ds:0.80, label:'Residual candidate configuration', note:'Not filtered under current filter conditions within stated domain. Content not determined by the filter. Passing the filter is not the same as specifying the good. Illustrative boundary position — not a proposed endpoint.'},
+  coupled:     {x:0.92, dp:0.92, ds:0.92, label:'Intrinsically coupled gradient — candidate direction', note:'Candidate direction if the proof program closes. Not established. The direction the argument is pointing — where the optimization target and conditions of pursuit are no longer treated as separable. Not where the proof has arrived. Illustrative boundary position — not a proposed endpoint or design specification.'},
 };
 
 const PRESET_IDS = {blind:'pBlind',engagement:'pEngagement',rlhf:'pRLHF',healer:'pHealer',exclusionary:'pExclusionary',candidate:'pCandidate',coupled:'pCoupled'};
@@ -679,21 +679,21 @@ function drawMap(){
       ctx.stroke();
     }
     ctx.restore();
-    // Label — opacity decoupled from region intensity so text stays readable in all quadrants
+    // Label
     const cx=(px0+px1)/2, cy=(py0+py1)/2;
-    ctx.fillStyle=`rgba(160,150,190,0.90)`;
-    ctx.font=`500 10px monospace`;
+    ctx.fillStyle=`rgba(200,190,220,${Math.min(intensity*1.8,1)})`;
+    ctx.font=`500 11px monospace`;
     ctx.textAlign='center';
     ctx.fillText(label, cx, cy-7);
     if(sublabel){
-      ctx.fillStyle=`rgba(140,130,170,0.78)`;
-      ctx.font=`9px monospace`;
+      ctx.fillStyle=`rgba(180,170,205,${Math.min(intensity*1.5,1)})`;
+      ctx.font=`10px monospace`;
       ctx.fillText(sublabel, cx, cy+8);
     }
   };
 
   // Lower-left: filtered by both
-  drawFiltered(0,0, 0.5,0.5, 'Filtered — both', 'persistence + valence', 0.90);
+  drawFiltered(0,0, 0.5,0.5, 'Filtered — both constraints', 'persistence + valence', 0.90);
   // Lower-right: passes persistence locally, fails valence
   drawFiltered(0.5,0, 1.0,0.5, 'Under structural pressure', 'valence-blind / substrate-aware', 0.65);
   // Upper-left: locally valence-aware, substrate-blind
@@ -703,20 +703,20 @@ function drawMap(){
   // Lower-right: bottom-right corner — V(t) degradation pulls y-axis down
   const lrX = PAD.l + 0.91*pw;
   const lrY = PAD.t + (1-0.08)*ph;
-  ctx.strokeStyle='rgba(232,160,48,0.80)'; ctx.lineWidth=1.8;
-  ctx.beginPath(); ctx.moveTo(lrX, lrY-20); ctx.lineTo(lrX, lrY-2); ctx.stroke();
+  ctx.strokeStyle='rgba(232,160,48,0.90)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(lrX, lrY-18); ctx.lineTo(lrX, lrY-2); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(lrX-5, lrY-8); ctx.lineTo(lrX, lrY-1); ctx.lineTo(lrX+5, lrY-8); ctx.stroke();
-  ctx.fillStyle='rgba(232,160,48,0.85)'; ctx.font='bold 10px monospace'; ctx.textAlign='center';
-  ctx.fillText('V(t)↓', lrX, lrY-23);
+  ctx.fillStyle='rgba(232,160,48,0.95)'; ctx.font='500 10px monospace'; ctx.textAlign='center';
+  ctx.fillText('V(t)↓', lrX, lrY-22);
 
   // Upper-left: top-left corner — S_corr degradation, diagonal down-left
   const ulX = PAD.l + 0.08*pw;
   const ulY = PAD.t + (1-0.90)*ph;
-  ctx.strokeStyle='rgba(232,160,48,0.80)'; ctx.lineWidth=1.8;
-  ctx.beginPath(); ctx.moveTo(ulX+17, ulY); ctx.lineTo(ulX+2, ulY+15); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(ulX+2, ulY+7); ctx.lineTo(ulX, ulY+16); ctx.lineTo(ulX+9, ulY+13); ctx.stroke();
-  ctx.fillStyle='rgba(232,160,48,0.85)'; ctx.font='bold 10px monospace'; ctx.textAlign='left';
-  ctx.fillText('S_corr↓', ulX, ulY-4);
+  ctx.strokeStyle='rgba(232,160,48,0.90)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(ulX+16, ulY+2); ctx.lineTo(ulX+2, ulY+14); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ulX+2, ulY+7); ctx.lineTo(ulX, ulY+15); ctx.lineTo(ulX+9, ulY+13); ctx.stroke();
+  ctx.fillStyle='rgba(232,160,48,0.95)'; ctx.font='500 10px monospace'; ctx.textAlign='left';
+  ctx.fillText('S_corr↓', ulX, ulY-3);
 
   // OP4 asymptotic band
   if(op4){
@@ -760,9 +760,9 @@ function drawMap(){
     ctx.strokeRect(PAD.l+0.50*pw, PAD.t, 0.50*pw, 0.50*ph);
     ctx.restore();
     // Label inside
-    ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.font='500 10px monospace'; ctx.textAlign='center';
+    ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.font='500 11px monospace'; ctx.textAlign='center';
     ctx.fillText('Residual candidate region', PAD.l+0.75*pw, PAD.t+0.20*ph);
-    ctx.fillStyle='rgba(255,255,255,0.38)'; ctx.font='9px monospace';
+    ctx.fillStyle='rgba(255,255,255,0.38)'; ctx.font='10px monospace';
     ctx.fillText('passes current filter conditions', PAD.l+0.75*pw, PAD.t+0.30*ph);
     ctx.fillText('content not determined', PAD.l+0.75*pw, PAD.t+0.39*ph);
   } else {
@@ -936,7 +936,7 @@ function updateFilters(){
   const baseWeight = 40;
   const weight = op2 ? 85 : baseWeight;
   document.getElementById('fwFill').style.width = weight+'%';
-  document.getElementById('fwNote').textContent = op2 ? 'OP2 assumed closed — matched weight' : 'OP2 open';
+  document.getElementById('fwNote').textContent = op2 ? 'OP2 counterfactual — valence-side formal weight raised; OP4/OP9 still open' : 'OP2 open';
 }
 
 function updateLoop(){
@@ -1013,7 +1013,7 @@ const STAGES = {
     fRecovery:42, fDiversity:44, fSensitivity:40, fScorr:52,
     svgGap:'widening', loopState:'degrading',
     quote:'The correction capacity it depends on — the users\' own ability to distinguish restoration from managed compliance — is what its success has been consuming.',
-    filterNote:'Structural filter status: proxy decoupling and sufficiency failure filters both flagged. Correction capacity declining.',
+    filterNote:'Structural filter status: proxy decoupling and sufficiency failure filters both showing pressure signatures. Correction capacity declining.',
     svgText:'SVG signal widening — strong Stability-Viability divergence. Both failure directions active: signal pursuing while capacity depletes; completion recognition not governing default policy.',
     loopText:'V(t) ↔ S_corr loop: degrading — V(t) decline beginning to pull S_corr down. Bidirectional coupling active.',
     svgClass:'red', loopClass:'collapsed'
